@@ -10,15 +10,18 @@
  */
 
 #include <Arduino.h>
+
 #include <PTITCube.h>
+
+PTIT_CDH cdh;
 
 PTIT_COM myLoRa;
 
 void setup() {
-    Serial.begin(115200);
-    while (!Serial) { delay(10); }
+    cdh.begin(115200);
+    while (!cdh) { delay(10); }
 
-    Serial.println("\n[VỆ TINH] Khởi tạo module LoRa chờ nhận lệnh...");
+    cdh.println("\n[VỆ TINH] Khởi tạo module LoRa chờ nhận lệnh...");
     myLoRa.init();
 
     // Phải cấu hình giống hệt USB-TTL ở trạm mặt đất (Dùng số thập phân)
@@ -26,7 +29,7 @@ void setup() {
     myLoRa.setChannel(23); 
     myLoRa.setTransmissionMode(0); 
     
-    Serial.println("[VỆ TINH] Đang lắng nghe lệnh từ trạm mặt đất...");
+    cdh.println("[VỆ TINH] Đang lắng nghe lệnh từ trạm mặt đất...");
 }
 
 void loop() {
