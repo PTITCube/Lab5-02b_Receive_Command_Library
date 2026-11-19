@@ -1,43 +1,22 @@
 /**
- * VÍ DỤ: VỆ TINH NHẬN LỆNH ĐIỀU KHIỂN (COMMAND) QUA LORA
- * 
- * Mô tả:
- * Board mạch CubeSat sẽ luôn trong trạng thái chờ nhận lệnh (Uplink) 
- * từ Trạm mặt đất (được điều khiển bằng USB-TTL trên máy tính).
- * 
- * LƯU Ý: USB-TTL ở mặt đất phải được cài Kênh (Channel) và Chế độ truyền
- * giống hệt như CubeSat mới có thể giao tiếp được!
+ * VÍ DỤ 5-2b: VỆ TINH NHẬN LỆNH ĐIỀU KHIỂN QUA THƯ VIỆN PTITCUBE
  */
-
 #include <Arduino.h>
-
 #include <PTITCube.h>
 
 PTIT_CDH cdh;
-
 PTIT_COM myLoRa;
 
 void setup() {
     cdh.begin(115200);
-    while (!cdh) { delay(10); }
-
-    cdh.println("\n[VỆ TINH] Khởi tạo module LoRa chờ nhận lệnh...");
     myLoRa.init();
-
-    // Phải cấu hình giống hệt USB-TTL ở trạm mặt đất (Dùng số thập phân)
-    // Ví dụ: Kênh 23
-    myLoRa.setChannel(23); 
-    myLoRa.setTransmissionMode(0); 
-    
-    cdh.println("[VỆ TINH] Đang lắng nghe lệnh từ trạm mặt đất...");
+    cdh.println("[COM] LoRa RX listening...");
 }
 
 void loop() {
-    // Hàm update() sẽ kiểm tra UART liên tục.
-    // Nếu bắt được lệnh từ trạm mặt đất, nó sẽ tự động in ra màn hình.
-    // (Trong thực tế, bạn có thể phân tích chuỗi này để ra lệnh bung dù, tắt nguồn...)
-    myLoRa.update();
-
-    // Thêm một độ trễ siêu nhỏ để tránh watchdog timer bị kích hoạt
+    String cmd = myLoRa.update();
+    if (cmd.length() > 0) {
+        cdh.println("[RX] " + cmd);
+    }
     delay(10);
 }
