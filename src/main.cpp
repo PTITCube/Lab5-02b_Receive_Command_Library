@@ -10,13 +10,13 @@ PTIT_COM myLoRa;
 void setup() {
     cdh.begin(115200);
     myLoRa.init();
-    cdh.println("[COM] LoRa RX listening...");
+    cdh.println("COM: LoRa RX listening...");
 }
 
 void loop() {
     String cmd = myLoRa.update();
     if (cmd.length() > 0) {
-        cdh.println("[RX] " + cmd);
+        cdh.println("RX: " + cmd);
     }
     delay(10);
 }
